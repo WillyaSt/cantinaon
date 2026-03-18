@@ -61,7 +61,7 @@ Endpoints já ligados ao PostgreSQL:
 - `GET /allergens`
 - `GET /health` (retorna status do banco)
 
-### Como executar back
+### Como executar
 ```bash
 cd backend
 npm i
