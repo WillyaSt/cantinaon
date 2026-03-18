@@ -1,6 +1,9 @@
 # CantinaOn
-
+<p align="center">
+  <img alt="CantinaOn Header" src="https://capsule-render.vercel.app/api?type=waving&height=220&color=0:21C45D,100:308CE8&text=CantinaOn&fontColor=FAFAFA&fontSize=56&fontAlignY=40&desc=Gest%C3%A3o%20inteligente%20de%20cantina%20escolar&descAlignY=62&descSize=18" />
+</p>
 SaaS para pedidos antecipados em cantina escolar com controle parental integrado.
+
 
 ## Stack base
 - **Frontend:** React
