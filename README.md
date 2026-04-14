@@ -32,9 +32,9 @@ No **CantinaOn**, a arquitetura segue o estilo **cliente-servidor em camadas**, 
 
 - **Camada de apresentação (Frontend):** aplicação web em **React + Vite**, responsável pelas telas, rotas, contexts e interação com o usuário.
 - **Camada de aplicação (Backend):** API em **Node.js + Express**, responsável por autenticação, validação, regras de negócio e exposição dos endpoints REST.
-- **Camada de domínio/serviços:** concentra os fluxos centrais do sistema, como pedidos, estoque, carteira e confirmação de retirada.
-- **Camada de persistência:** composta pelos repositórios e pela lógica de acesso a dados, usada para consultar e gravar informações no PostgreSQL.
-- **Banco de dados:** responsável pelo armazenamento persistente de usuários, produtos, pedidos, pagamentos, vínculos parentais, carteira e demais entidades do sistema.
+- **Camada de domínio/serviços:** concentra fluxos centrais como pedidos, estoque, carteira e confirmação de retirada.
+- **Camada de persistência:** repositórios e acesso a dados usados para consultar e gravar informações no PostgreSQL.
+- **Banco de dados:** armazena usuários, produtos, pedidos, pagamentos, vínculos parentais, carteira e demais entidades do sistema.
 
 ### Relação entre as camadas
 
@@ -43,45 +43,81 @@ O fluxo principal do sistema acontece da seguinte forma:
 1. o usuário acessa a aplicação pelo navegador;
 2. o frontend renderiza a interface e envia requisições para a API;
 3. o backend recebe a requisição, valida autenticação e regras de acesso;
-4. a camada de serviços processa a lógica de negócio;
-5. a camada de persistência realiza leitura e escrita no PostgreSQL;
-6. a resposta retorna ao frontend e é exibida ao usuário.
+4. os services processam a lógica de negócio;
+5. os repositories executam leitura e escrita no PostgreSQL;
+6. a resposta retorna ao frontend e é exibida para o usuário.
 
 ### Representação visual da arquitetura
 
 ```mermaid
-flowchart LR
-    U[Usuario no navegador]
-    F[Frontend<br/>React + Vite]
-    A[API Backend<br/>Node.js + Express]
-    S[Camada de Servicos<br/>Pedidos, Estoque, Carteira, Retirada]
-    R[Camada de Persistencia<br/>Repositorios]
-    DB[(PostgreSQL)]
+flowchart TB
+    subgraph CLIENTE["Camada de Apresentação"]
+        U["Usuário<br/>Aluno, Responsável, Staff, Gestão"]
+        FE["Frontend Web<br/>React + Vite"]
+        UI["Telas, Rotas e Contexts"]
+        U --> FE
+        FE --> UI
+    end
 
-    U --> F
-    F -->|HTTP / JSON| A
-    A --> S
-    S --> R
-    R -->|SQL| DB
-    DB --> R
-    R --> S
-    S --> A
-    A --> F
+    subgraph APP["Camada de Aplicação"]
+        API["API REST<br/>Node.js + Express"]
+        AUTH["Autenticação e Autorização"]
+        CTRL["Controllers / Rotas"]
+        API --> AUTH
+        API --> CTRL
+    end
+
+    subgraph DOM["Camada de Domínio / Serviços"]
+        SRV["Services / Regras de Negócio"]
+        PED["Pedidos"]
+        EST["Estoque"]
+        WAL["Carteira"]
+        RET["Confirmação de Retirada"]
+        PAR["Controle Parental"]
+
+        CTRL --> SRV
+        SRV --> PED
+        SRV --> EST
+        SRV --> WAL
+        SRV --> RET
+        SRV --> PAR
+    end
+
+    subgraph PERS["Camada de Persistência"]
+        REPO["Repositories / Acesso a Dados"]
+        SRV --> REPO
+    end
+
+    subgraph DATA["Banco de Dados"]
+        DB[("PostgreSQL")]
+        ENT["Usuários<br/>Produtos<br/>Pedidos<br/>Pagamentos<br/>Vínculos Parentais<br/>Carteira"]
+        REPO --> DB
+        DB --> ENT
+    end
+
+    subgraph EXT["Integrações Externas"]
+        MP["Mercado Pago"]
+        CE["canteen-express<br/>Frontend / Protótipo externo"]
+    end
+
+    FE -->|"HTTP / JSON"| API
+    CE -->|"HTTP / JSON"| API
+    API -->|"Checkout / Webhook"| MP
 ```
 
 ### Como essa arquitetura ajuda no deployment
 
-Essa arquitetura é importante para a implantação porque deixa claro **o que precisa ser publicado, configurado e monitorado** em cada ambiente:
+Essa arquitetura é importante para a implantação porque deixa claro o que precisa ser publicado, configurado e monitorado:
 
-- o **frontend** pode ser publicado separadamente como aplicação web;
+- o **frontend** pode ser publicado separadamente como aplicação web estática;
 - o **backend** precisa estar em execução como serviço Node.js, expondo a API HTTP;
-- o **PostgreSQL** deve estar disponível antes da API, pois o backend depende da variável `DATABASE_URL` para se conectar ao banco;
+- o **PostgreSQL** deve estar disponível antes da API, pois o backend depende da variável `DATABASE_URL` para conectar ao banco;
 - em desenvolvimento, o frontend pode usar proxy `/api` para encaminhar chamadas ao backend em `localhost:3000`;
-- em produção, essa separação permite alterar host, porta e variáveis de ambiente sem modificar as regras de negócio.
+- em produção, a mesma separação permite trocar host, porta e variáveis de ambiente sem alterar a regra de negócio.
 
 ### Resumo arquitetural
 
-Em termos simples, o **CantinaOn** está organizado em três grandes blocos:
+Em termos simples, o **CantinaOn** possui uma arquitetura organizada em três grandes blocos:
 
 - **Frontend:** interface e experiência do usuário;
 - **Backend:** processamento das regras do sistema;
