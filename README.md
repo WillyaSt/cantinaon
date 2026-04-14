@@ -22,6 +22,122 @@ Na prática, o sistema substitui controles manuais por uma base centralizada de 
 
 ---
 
+## 🏗️ Arquitetura do Sistema
+
+A arquitetura de software é a organização fundamental do sistema: ela define seus componentes, os relacionamentos entre eles e as diretrizes que orientam sua evolução e implantação. Em outras palavras, funciona como o “plano de construção” da aplicação, mostrando como cada parte se conecta para atender às necessidades do negócio.
+
+No **CantinaOn**, a arquitetura segue o estilo **cliente-servidor em camadas**, separando interface, processamento das regras de negócio e persistência de dados. Essa divisão facilita a manutenção, os testes, a evolução do código e também o deployment, pois cada parte pode ser configurada e publicada com responsabilidades bem definidas.
+
+### Componentes principais
+
+- **Camada de apresentação (Frontend):** aplicação web em **React + Vite**, responsável pelas telas, rotas, contexts e interação com o usuário.
+- **Camada de aplicação (Backend):** API em **Node.js + Express**, responsável por autenticação, validação, regras de negócio e exposição dos endpoints REST.
+- **Camada de domínio/serviços:** concentra fluxos centrais como pedidos, estoque, carteira e confirmação de retirada.
+- **Camada de persistência:** repositórios e acesso a dados usados para consultar e gravar informações no PostgreSQL.
+- **Banco de dados:** armazena usuários, produtos, pedidos, pagamentos, vínculos parentais, carteira e demais entidades do sistema.
+
+### Relação entre as camadas
+
+O fluxo principal do sistema acontece da seguinte forma:
+
+1. o usuário acessa a aplicação pelo navegador;
+2. o frontend renderiza a interface e envia requisições para a API;
+3. o backend recebe a requisição, valida autenticação e regras de acesso;
+4. os services processam a lógica de negócio;
+5. os repositories executam leitura e escrita no PostgreSQL;
+6. a resposta retorna ao frontend e é exibida para o usuário.
+
+### Representação visual da arquitetura
+
+```mermaid
+flowchart TB
+    subgraph CLIENTE["Camada de Apresentação"]
+        U["Usuário<br/>Aluno, Responsável, Staff, Gestão"]
+        FE["Frontend Web<br/>React + Vite"]
+        UI["Telas, Rotas e Contexts"]
+        U --> FE
+        FE --> UI
+    end
+
+    subgraph APP["Camada de Aplicação"]
+        API["API REST<br/>Node.js + Express"]
+        AUTH["Autenticação e Autorização"]
+        CTRL["Controllers / Rotas"]
+        API --> AUTH
+        API --> CTRL
+    end
+
+    subgraph DOM["Camada de Domínio / Serviços"]
+        SRV["Services / Regras de Negócio"]
+        PED["Pedidos"]
+        EST["Estoque"]
+        WAL["Carteira"]
+        RET["Confirmação de Retirada"]
+        PAR["Controle Parental"]
+
+        CTRL --> SRV
+        SRV --> PED
+        SRV --> EST
+        SRV --> WAL
+        SRV --> RET
+        SRV --> PAR
+    end
+
+    subgraph PERS["Camada de Persistência"]
+        REPO["Repositories / Acesso a Dados"]
+        SRV --> REPO
+    end
+
+    subgraph DATA["Banco de Dados"]
+        DB[("PostgreSQL")]
+        ENT["Usuários<br/>Produtos<br/>Pedidos<br/>Pagamentos<br/>Vínculos Parentais<br/>Carteira"]
+        REPO --> DB
+        DB --> ENT
+    end
+
+    subgraph EXT["Integrações Externas"]
+        MP["Mercado Pago"]
+        CE["canteen-express<br/>Frontend / Protótipo externo"]
+    end
+
+    FE -->|"HTTP / JSON"| API
+    CE -->|"HTTP / JSON"| API
+    API -->|"Checkout / Webhook"| MP
+```
+
+### Como essa arquitetura ajuda no deployment
+
+Essa arquitetura é importante para a implantação porque deixa claro o que precisa ser publicado, configurado e monitorado:
+
+- o **frontend** pode ser publicado separadamente como aplicação web estática;
+- o **backend** precisa estar em execução como serviço Node.js, expondo a API HTTP;
+- o **PostgreSQL** deve estar disponível antes da API, pois o backend depende da variável `DATABASE_URL` para conectar ao banco;
+- em desenvolvimento, o frontend pode usar proxy `/api` para encaminhar chamadas ao backend em `localhost:3000`;
+- em produção, a mesma separação permite trocar host, porta e variáveis de ambiente sem alterar a regra de negócio.
+
+### Resumo arquitetural
+
+Em termos simples, o **CantinaOn** possui uma arquitetura organizada em três grandes blocos:
+
+- **Frontend:** interface e experiência do usuário;
+- **Backend:** processamento das regras do sistema;
+- **Banco de dados:** armazenamento persistente das informações.
+
+Essa organização torna o sistema mais compreensível, facilita a evolução do projeto e cria uma base adequada para crescimento futuro.
+
+### Fluxo resumido de uma compra
+
+1. o usuário acessa o frontend;
+2. o frontend envia a requisição para o backend;
+3. o backend consulta o cardápio e os dados no PostgreSQL;
+4. o usuário cria um pedido;
+5. o backend registra o pedido e reserva estoque;
+6. o pagamento é processado;
+7. após confirmação, o sistema gera o código de retirada;
+8. a equipe da cantina confirma a retirada no fluxo operacional.
+
+---
+
 ## 📁 Conteúdo inicial deste repositório
 
 - [`docs/cantinaon-spec.md`](docs/cantinaon-spec.md): especificação funcional e técnica consolidada.
@@ -487,6 +603,8 @@ Foi adicionada uma trilha inicial em [`docs/canteen-express-integration-plan.md`
 - [x] Há validação pós-implantação
 - [x] Há procedimento de rollback
 - [x] A formatação Markdown está consistente
+- [x] A arquitetura do sistema foi documentada
+- [x] A arquitetura possui representação visual
 - [x] Os links internos do README estão organizados
 
 ---
