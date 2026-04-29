@@ -616,3 +616,259 @@ Foi adicionada uma trilha inicial em [`docs/canteen-express-integration-plan.md`
 - [Plano de integração do frontend](docs/canteen-express-integration-plan.md)
 - [Schema do banco](database/schema.sql)
 - [Seed local](database/seed.sql)
+
+## 🖥️ Requisitos mínimos de servidor para hospedagem
+
+Esta seção define os requisitos mínimos de infraestrutura para execução do **CantinaOn** em ambiente de produção de pequeno porte (ex.: uma escola com volume inicial de usuários). Para cenários com maior concorrência de acessos, recomenda-se escalonamento vertical/horizontal e monitoramento contínuo.
+
+### 1) Backend (Node.js + Express)
+
+O backend é responsável pela autenticação, regras de negócio, integração com pagamento e exposição de endpoints REST.
+
+**Requisitos de software (mínimo):**
+- Sistema operacional Linux 64 bits (Ubuntu Server 22.04 LTS ou equivalente);
+- Node.js LTS (preferencialmente versão 20 ou superior);
+- NPM (ou PNPM/Yarn, conforme padronização do projeto);
+- Gerenciador de processo para produção (PM2 ou `systemd`);
+- Nginx (ou equivalente) como proxy reverso para HTTPS e roteamento.
+
+**Requisitos de hardware (mínimo dedicado ao backend):**
+- CPU: 2 vCPUs;
+- Memória RAM: 2 GB;
+- Armazenamento: 20 GB SSD.
+
+> Observação: para melhor estabilidade com múltiplos acessos simultâneos, recomenda-se 4 vCPUs e 4 GB RAM.
+
+### 2) Banco de dados (PostgreSQL)
+
+O PostgreSQL armazena dados críticos do sistema (usuários, pedidos, pagamentos, estoque e vínculos parentais).
+
+**Requisitos de software (mínimo):**
+- PostgreSQL 14+;
+- Ferramentas de backup (`pg_dump`, `pg_restore`);
+- Política de retenção de backup diário.
+
+**Requisitos de hardware (mínimo dedicado ao banco):**
+- CPU: 2 vCPUs;
+- Memória RAM: 4 GB;
+- Armazenamento: 40 GB SSD.
+
+**Boas práticas obrigatórias para produção:**
+- Ativar autenticação forte no banco;
+- Restringir acesso por IP/rede privada;
+- Não expor a porta do PostgreSQL publicamente na internet;
+- Realizar backup periódico com teste de restauração.
+
+### 3) Frontend (React)
+
+O frontend pode ser servido como conteúdo estático por Nginx, CDN ou plataforma de hospedagem estática.
+
+**Requisitos de software (mínimo):**
+- Node.js LTS para etapa de build;
+- Nginx/Apache (quando hospedado em servidor próprio) para servir arquivos estáticos.
+
+**Requisitos de hardware (mínimo para hospedagem estática):**
+- CPU: 1 vCPU;
+- Memória RAM: 1 GB;
+- Armazenamento: 10 GB SSD.
+
+### 4) Recursos mínimos consolidados do ambiente
+
+Para um cenário inicial com backend, frontend e banco em uma mesma infraestrutura, recomenda-se no mínimo:
+
+- **CPU:** 4 vCPUs;
+- **Memória RAM:** 8 GB;
+- **Armazenamento:** 80 GB SSD;
+- **Sistema operacional:** Linux 64 bits;
+- **Rede:** conectividade estável com baixa latência interna entre API e banco.
+
+### 5) Segurança obrigatória (infraestrutura e aplicação)
+
+Para garantir confidencialidade e integridade dos dados, os seguintes controles são obrigatórios:
+
+1. **HTTPS habilitado em produção**
+   - uso de certificado TLS válido;
+   - redirecionamento automático de HTTP para HTTPS.
+
+2. **Variáveis de ambiente para dados sensíveis**
+   - nunca versionar segredos em repositório;
+   - armazenar chaves e credenciais em `.env` local (desenvolvimento) e cofre de segredos em produção.
+
+3. **Segregação de ambientes**
+   - separar desenvolvimento, homologação e produção;
+   - utilizar credenciais diferentes por ambiente.
+
+4. **Política de acesso mínimo**
+   - usuários, serviços e banco com privilégios estritamente necessários;
+   - registro e auditoria de acessos administrativos.
+
+---
+
+## 🚀 Guia detalhado de implantação (produção)
+
+O roteiro a seguir foi estruturado para implantação completa do sistema **CantinaOn** com backend em Node.js, frontend em React e PostgreSQL.
+
+### Etapa 1 — Preparação do ambiente
+
+1. Provisionar servidor Linux atualizado.
+2. Atualizar pacotes do sistema operacional.
+3. Instalar dependências básicas:
+   - Git;
+   - Node.js LTS;
+   - PostgreSQL;
+   - Nginx;
+   - PM2 (opcional, porém recomendado para gestão do processo Node.js).
+4. Clonar o repositório do projeto em diretório apropriado.
+5. Definir usuário de serviço (não-root) para execução da aplicação.
+
+Exemplo de referência (Ubuntu):
+
+```bash
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y git curl nginx postgresql postgresql-contrib
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs
+sudo npm install -g pm2
+```
+
+### Etapa 2 — Configuração do banco de dados (PostgreSQL)
+
+1. Criar banco, usuário e senha dedicados ao sistema.
+2. Conceder privilégios ao usuário da aplicação.
+3. Aplicar schema e seed (quando necessário para ambiente de teste).
+4. Validar conectividade via string `DATABASE_URL`.
+
+Exemplo:
+
+```sql
+CREATE DATABASE cantinaon;
+CREATE USER cantinaon_app WITH ENCRYPTED PASSWORD 'senha_forte_aqui';
+GRANT ALL PRIVILEGES ON DATABASE cantinaon TO cantinaon_app;
+```
+
+Exemplo de carga inicial:
+
+```bash
+psql "postgresql://cantinaon_app:senha_forte_aqui@localhost:5432/cantinaon" -f database/schema.sql
+psql "postgresql://cantinaon_app:senha_forte_aqui@localhost:5432/cantinaon" -f database/seed.sql
+```
+
+### Etapa 3 — Configuração das variáveis de ambiente
+
+No backend, criar arquivo `.env` (ou variável de ambiente no serviço) com valores de produção.
+
+Exemplo (ajustar para o ambiente real):
+
+```env
+NODE_ENV=production
+PORT=3000
+DATABASE_URL=postgresql://cantinaon_app:senha_forte_aqui@localhost:5432/cantinaon
+JWT_ACCESS_SECRET=definir_segredo_longo_e_unico
+JWT_REFRESH_SECRET=definir_segredo_longo_e_unico
+MERCADOPAGO_ACCESS_TOKEN=definir_token_producao
+FRONTEND_URL=https://app.cantinaon.com.br
+```
+
+Diretrizes:
+- utilizar segredos longos e aleatórios;
+- rotacionar chaves periodicamente;
+- restringir permissões de leitura do arquivo `.env`.
+
+### Etapa 4 — Execução do backend
+
+1. Acessar diretório `backend/`.
+2. Instalar dependências.
+3. Executar migrações/scripts necessários.
+4. Iniciar serviço em modo produção.
+5. Configurar reinício automático.
+
+Exemplo:
+
+```bash
+cd backend
+npm install
+npm run start
+```
+
+Com PM2:
+
+```bash
+pm2 start npm --name cantinaon-backend -- run start
+pm2 save
+pm2 startup
+```
+
+### Etapa 5 — Build e deploy do frontend
+
+1. Acessar diretório do frontend.
+2. Instalar dependências.
+3. Gerar build otimizado de produção.
+4. Publicar pasta de build no servidor web (Nginx).
+5. Configurar fallback de rotas para SPA (quando aplicável).
+
+Exemplo:
+
+```bash
+cd frontend
+npm install
+npm run build
+```
+
+Após o build, publicar os arquivos gerados (por exemplo, `dist/`) no diretório estático do Nginx (ex.: `/var/www/cantinaon`).
+
+### Etapa 6 — Configuração de proxy e HTTPS
+
+1. Configurar Nginx para:
+   - servir frontend estático;
+   - encaminhar `/api` para `http://localhost:3000` (backend);
+   - habilitar HTTPS com certificado TLS válido.
+2. Habilitar redirecionamento HTTP → HTTPS.
+3. Reiniciar Nginx e validar sintaxe da configuração.
+
+Exemplo de validação:
+
+```bash
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+### Etapa 7 — Testes após implantação
+
+Realizar validações funcionais e técnicas imediatamente após o deploy:
+
+1. **Teste de saúde da API**
+   - verificar endpoint de status online (`GET /ops/online-status`).
+2. **Teste de autenticação**
+   - registrar/login de usuário de teste;
+   - validar emissão de token.
+3. **Teste de fluxo principal**
+   - consultar cardápio;
+   - criar pedido;
+   - simular pagamento;
+   - confirmar retirada.
+4. **Teste de integração frontend-backend**
+   - garantir que chamadas `/api` respondem sem erro CORS.
+5. **Teste de banco de dados**
+   - confirmar escrita/leitura de pedidos e pagamentos.
+6. **Teste de segurança**
+   - certificar uso obrigatório de HTTPS;
+   - validar ausência de segredos em logs públicos.
+
+Exemplos de comandos de verificação:
+
+```bash
+curl -I https://app.cantinaon.com.br
+curl https://api.cantinaon.com.br/ops/online-status
+pm2 status
+```
+
+### Etapa 8 — Operação contínua (pós-implantação)
+
+Para garantir disponibilidade e confiabilidade em médio e longo prazo, recomenda-se:
+
+- monitoramento de CPU, RAM, disco e latência;
+- centralização de logs de aplicação e Nginx;
+- política de backup diário do PostgreSQL com teste de restauração;
+- rotina de atualização de segurança do servidor;
+- documentação de rollback para versões anteriores.
+

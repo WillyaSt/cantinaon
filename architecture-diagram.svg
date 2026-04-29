@@ -1,0 +1,101 @@
+<svg width="1200" height="700" viewBox="0 0 1200 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="700" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F6FBFF"/>
+      <stop offset="1" stop-color="#F8FFF9"/>
+    </linearGradient>
+    <linearGradient id="green" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#21C45D"/>
+      <stop offset="1" stop-color="#1E9C4A"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#308CE8"/>
+      <stop offset="1" stop-color="#1D6FD0"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#0F172A" flood-opacity="0.10"/>
+    </filter>
+    <marker id="arrow" markerWidth="14" markerHeight="14" refX="10" refY="7" orient="auto">
+      <path d="M0 0L14 7L0 14V0Z" fill="#64748B"/>
+    </marker>
+    <style>
+      .title { font: 700 34px Arial, Helvetica, sans-serif; fill: #0F172A; }
+      .subtitle { font: 500 17px Arial, Helvetica, sans-serif; fill: #334155; }
+      .section { font: 700 22px Arial, Helvetica, sans-serif; fill: #0F172A; }
+      .cardTitleWhite { font: 700 28px Arial, Helvetica, sans-serif; fill: white; }
+      .cardTitle { font: 700 24px Arial, Helvetica, sans-serif; fill: #0F172A; }
+      .label { font: 600 18px Arial, Helvetica, sans-serif; fill: #0F172A; }
+      .small { font: 500 15px Arial, Helvetica, sans-serif; fill: #475569; }
+      .tiny { font: 600 14px Arial, Helvetica, sans-serif; fill: #64748B; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="700" rx="24" fill="url(#bg)"/>
+
+  <text x="70" y="70" class="title">Arquitetura do sistema CantinaOn</text>
+  <text x="70" y="105" class="subtitle">Visão simplificada da comunicação entre usuário, frontend, API, regras de negócio e banco de dados.</text>
+
+  <rect x="60" y="150" width="180" height="380" rx="26" fill="#FFFFFF" stroke="#D9E6F2" filter="url(#shadow)"/>
+  <circle cx="150" cy="235" r="42" fill="#E2F5EA"/>
+  <rect x="108" y="214" width="84" height="14" rx="7" fill="#21C45D" fill-opacity="0.25"/>
+  <rect x="120" y="235" width="60" height="14" rx="7" fill="#21C45D" fill-opacity="0.45"/>
+  <rect x="126" y="257" width="48" height="14" rx="7" fill="#21C45D" fill-opacity="0.65"/>
+  <text x="102" y="335" class="cardTitle">Usuários</text>
+  <text x="92" y="370" class="small">Aluno</text>
+  <text x="92" y="397" class="small">Responsável</text>
+  <text x="92" y="424" class="small">Funcionário</text>
+  <text x="92" y="451" class="small">Administrador</text>
+  <text x="84" y="495" class="tiny">Acesso pelo navegador</text>
+
+  <rect x="295" y="145" width="255" height="390" rx="28" fill="url(#green)" filter="url(#shadow)"/>
+  <text x="365" y="192" class="cardTitleWhite">Frontend</text>
+  <text x="386" y="220" class="tiny" fill="#E8FFF1">React + Vite</text>
+  <rect x="330" y="255" width="185" height="58" rx="16" fill="#FFFFFF" fill-opacity="0.95"/>
+  <text x="353" y="290" class="label">Páginas e rotas</text>
+  <text x="349" y="308" class="tiny">Home, login, pedidos, perfil</text>
+  <rect x="330" y="330" width="185" height="58" rx="16" fill="#FFFFFF" fill-opacity="0.95"/>
+  <text x="349" y="365" class="label">Contexts e hooks</text>
+  <text x="348" y="383" class="tiny">Auth, cart, orders, store</text>
+  <rect x="330" y="405" width="185" height="70" rx="16" fill="#FFFFFF" fill-opacity="0.95"/>
+  <text x="356" y="438" class="label">Cliente HTTP</text>
+  <text x="349" y="458" class="tiny">/api via fetch</text>
+  <text x="344" y="478" class="tiny">Proxy local: 5173 → 3000</text>
+
+  <rect x="605" y="115" width="350" height="450" rx="28" fill="url(#blue)" filter="url(#shadow)"/>
+  <text x="728" y="162" class="cardTitleWhite">Backend</text>
+  <text x="713" y="190" class="tiny" fill="#EAF3FF">Node.js + Express</text>
+  <rect x="638" y="220" width="284" height="64" rx="16" fill="#FFFFFF" fill-opacity="0.96"/>
+  <text x="675" y="258" class="label">Routes / Controllers</text>
+  <text x="676" y="278" class="tiny">auth, menu, orders, wallet, admin</text>
+  <rect x="638" y="300" width="284" height="64" rx="16" fill="#FFFFFF" fill-opacity="0.96"/>
+  <text x="679" y="337" class="label">Middleware de auth</text>
+  <text x="698" y="357" class="tiny">Validação de token e perfis</text>
+  <rect x="638" y="380" width="284" height="64" rx="16" fill="#FFFFFF" fill-opacity="0.96"/>
+  <text x="685" y="417" class="label">Services</text>
+  <text x="655" y="437" class="tiny">Pedidos, estoque, carteira, regras</text>
+  <rect x="638" y="460" width="284" height="74" rx="16" fill="#FFFFFF" fill-opacity="0.96"/>
+  <text x="667" y="497" class="label">Repositories / Data</text>
+  <text x="654" y="517" class="tiny">Consulta, escrita e integração SQL</text>
+
+  <rect x="1010" y="180" width="140" height="300" rx="26" fill="#FFFFFF" stroke="#D8E6F7" filter="url(#shadow)"/>
+  <ellipse cx="1080" cy="225" rx="42" ry="16" fill="#D9ECFF" stroke="#7AB5F2"/>
+  <rect x="1038" y="225" width="84" height="122" fill="#D9ECFF" stroke="#7AB5F2"/>
+  <ellipse cx="1080" cy="347" rx="42" ry="16" fill="#D9ECFF" stroke="#7AB5F2"/>
+  <text x="1033" y="395" class="cardTitle">PostgreSQL</text>
+  <text x="1047" y="430" class="tiny">Usuários</text>
+  <text x="1048" y="451" class="tiny">Produtos</text>
+  <text x="1052" y="472" class="tiny">Pedidos</text>
+
+  <path d="M240 340H295" stroke="#64748B" stroke-width="4" marker-end="url(#arrow)"/>
+  <path d="M550 340H605" stroke="#64748B" stroke-width="4" marker-end="url(#arrow)"/>
+  <path d="M955 340H1010" stroke="#64748B" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <text x="246" y="325" class="tiny">interação</text>
+  <text x="559" y="325" class="tiny">requisições REST</text>
+  <text x="957" y="325" class="tiny">SQL</text>
+
+  <rect x="70" y="585" width="1060" height="80" rx="20" fill="#FFFFFF" stroke="#DDE7F0"/>
+  <text x="100" y="620" class="section">Leitura rápida:</text>
+  <text x="250" y="620" class="small">o navegador acessa a interface React, que chama a API Express; a API aplica autenticação e regras de negócio,</text>
+  <text x="100" y="646" class="small">e então persiste os dados no PostgreSQL. Essa separação facilita manutenção, testes e implantação em produção.</text>
+</svg>
