@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Manual oficial do usuário CantinaON: documentação completa para alunos, responsáveis, cantina e administradores.">
+  <title>CantinaON Docs — Manual do Usuário</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#content">Pular para o conteúdo</a>
+  <div class="reading-progress" aria-hidden="true"><span id="readingProgress"></span></div>
+
+  <div class="app-shell" data-sidebar="closed">
+    <header class="topbar" role="banner">
+      <button class="icon-button menu-toggle" type="button" aria-label="Abrir menu" aria-controls="sidebar" aria-expanded="false" data-action="toggle-sidebar">
+        <span></span><span></span><span></span>
+      </button>
+      <a class="brand" href="?page=introducao" data-page="introducao" aria-label="CantinaON Docs - Início">
+        <span class="brand-mark">C</span>
+        <span><strong>CantinaON</strong><small>Manual do Usuário</small></span>
+      </a>
+      <button class="search-trigger" type="button" data-action="open-search" aria-haspopup="dialog">
+        <span>Buscar no manual</span><kbd>Ctrl K</kbd>
+      </button>
+      <div class="topbar-actions">
+        <button class="icon-button" type="button" data-action="toggle-focus" aria-label="Ativar modo foco" title="Modo foco">◐</button>
+        <button class="icon-button" type="button" data-action="toggle-theme" aria-label="Alternar tema" title="Tema">☾</button>
+      </div>
+    </header>
+
+    <aside class="sidebar" id="sidebar" aria-label="Navegação principal">
+      <div class="sidebar-header">
+        <span class="eyebrow">Documentação SaaS</span>
+        <strong>Manual enterprise</strong>
+      </div>
+      <nav class="sidebar-nav" id="sidebarNav"></nav>
+    </aside>
+
+    <main class="content-area" id="main" role="main">
+      <nav class="breadcrumbs" id="breadcrumbs" aria-label="Breadcrumb"></nav>
+      <section class="content-card" aria-live="polite">
+        <div class="page-meta">
+          <span id="readingTime">Leitura: —</span>
+          <button class="favorite-button" type="button" data-action="toggle-favorite" aria-pressed="false">☆ Favoritar</button>
+        </div>
+        <div class="skeleton" id="skeleton" hidden>
+          <span></span><span></span><span></span><span></span>
+        </div>
+        <article class="doc-content" id="content" tabindex="-1"></article>
+      </section>
+    </main>
+
+    <aside class="toc-panel" aria-label="Sumário da página">
+      <div class="toc-card">
+        <strong>Nesta página</strong>
+        <nav id="toc"></nav>
+      </div>
+    </aside>
+  </div>
+
+  <div class="search-dialog" id="searchDialog" role="dialog" aria-modal="true" aria-labelledby="searchTitle" hidden>
+    <div class="search-backdrop" data-action="close-search"></div>
+    <section class="search-panel">
+      <header>
+        <h2 id="searchTitle">Buscar no CantinaON Docs</h2>
+        <button class="icon-button" type="button" data-action="close-search" aria-label="Fechar busca">×</button>
+      </header>
+      <label class="sr-only" for="searchInput">Termo de busca</label>
+      <input id="searchInput" type="search" placeholder="Ex.: limite diário, PIX, auditoria..." autocomplete="off">
+      <div class="search-filters" id="searchFilters" aria-label="Filtros de categoria"></div>
+      <div class="search-results" id="searchResults" role="listbox" aria-label="Resultados de busca"></div>
+    </section>
+  </div>
+
+  <div class="onboarding" id="onboarding" role="dialog" aria-modal="true" aria-labelledby="onboardingTitle" hidden>
+    <div class="onboarding-card">
+      <span class="badge">Novo manual</span>
+      <h2 id="onboardingTitle">Bem-vindo ao Manual CantinaON</h2>
+      <p>Use a busca instantânea, favoritar tópicos críticos, alternar tema e navegar por perfis com uma experiência sem recarregar a página.</p>
+      <div class="onboarding-grid">
+        <span>⌘/Ctrl K<br><small>Busca rápida</small></span>
+        <span>☆<br><small>Favoritos</small></span>
+        <span>◐<br><small>Modo foco</small></span>
+      </div>
+      <button class="button primary" type="button" data-action="close-onboarding">Começar</button>
+    </div>
+  </div>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
