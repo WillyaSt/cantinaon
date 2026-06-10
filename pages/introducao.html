@@ -7,15 +7,23 @@
 <h2>Objetivo do manual</h2>
 <p>Este manual orienta alunos, responsáveis, funcionários da cantina e administradores na utilização segura e padronizada do CantinaON. A documentação foi organizada por perfis para reduzir atrito operacional e destacar responsabilidades críticas.</p>
 <div class="grid cols-3">
-  <article class="card"><span class="badge">Aluno</span><h3>Compra assistida</h3><p>Cardápio digital, carrinho, pagamento, fila, código de retirada, alérgenos e histórico.</p></article>
-  <article class="card"><span class="badge">Cantina</span><h3>Operação em tempo real</h3><p>Painel de pedidos, status, retirada, contingência, cancelamentos e auditoria.</p></article>
-  <article class="card"><span class="badge">Admin</span><h3>Governança</h3><p>Usuários, permissões, produtos, estoque, relatórios, parâmetros e segurança alimentar.</p></article>
+  <article class="card"><span class="badge">Aluno</span><h3>Compra assistida</h3><p>Cardápio digital, carrinho, pagamento, fila, código de retirada, alérgenos, bloqueios do responsável, saldo e histórico de consumo.</p></article>
+  <article class="card"><span class="badge">Cantina</span><h3>Operação em tempo real</h3><p>Painel de pedidos, status por etapa, retirada com código, contingência, cancelamentos, alertas de estoque e auditoria de atendimento.</p></article>
+  <article class="card"><span class="badge">Admin</span><h3>Governança</h3><p>Usuários, permissões, produtos, estoque, relatórios, parâmetros, segurança alimentar, revisão de alérgenos e rastreabilidade.</p></article>
 </div>
 <h2>Benefícios principais</h2>
 <ul class="checklist"><li>Reduz filas presenciais com pedidos antecipados e código de retirada.</li><li>Permite controle parental com limite diário, bloqueio de produtos e recarga automática.</li><li>Melhora previsibilidade da cantina por meio de estoque online, relatórios e indicadores.</li><li>Registra ações sensíveis para auditoria, rastreabilidade e prestação de contas.</li><li>Destaca alérgenos e restrições para apoiar escolhas alimentares seguras.</li></ul>
 <h2>Arquitetura geral</h2>
-<div class="diagram"><span>Usuário</span><i>→</i><span>App CantinaON</span><i>→</i><span>Pedidos e pagamentos</span><i>→</i><span>Painel da cantina</span><i>→</i><span>Retirada auditada</span></div>
+<p>O manual segue a EAP do projeto: primeiro apresenta a arquitetura documental, depois aprofunda as jornadas de aluno/responsável, funcionário da cantina e administrador. Essa organização ajuda cada perfil a encontrar rapidamente suas responsabilidades, riscos e procedimentos.</p>
+<div class="diagram"><span>Governança documental</span><i>→</i><span>Aluno/Responsável</span><i>→</i><span>Funcionário da cantina</span><i>→</i><span>Administrador</span><i>→</i><span>Auditoria e revisão</span></div>
 <div class="screenshot"><strong>Placeholder de screenshot</strong><br>Tela inicial do dashboard com cards de saldo, pedidos em andamento e alertas de alérgenos.</div>
+<h2>Mapa informativo da EAP</h2>
+<div class="grid cols-2">
+  <article class="card"><h3>Documentação e governança</h3><p>Inclui escopo, objetivos, matriz RACI, padrões do manual, plano de revisão, sumário, convenções, matriz de rastreabilidade e critérios de aprovação por perfil.</p></article>
+  <article class="card"><h3>Jornada aluno/responsável</h3><p>Cobre primeiros acessos, vínculo responsável-aluno, carteira digital, cardápio, carrinho, checkout, fila, alérgenos, controle parental, limite diário, bloqueio de produtos, recarga automática, histórico de compras e revisão de restrições.</p></article>
+  <article class="card"><h3>Operação da cantina</h3><p>Detalha acesso ao painel, triagem da fila, gestão de pedidos, operação online, contingência, cancelamentos, estornos quando aplicáveis, retirada por código e ações irreversíveis com auditoria.</p></article>
+  <article class="card"><h3>Administração</h3><p>Centraliza gestão de usuários e perfis, produtos, cardápio, estoque, disponibilidade online, parâmetros, alérgenos, segurança alimentar e comunicação de mudanças operacionais.</p></article>
+</div>
 <h2>Fluxo principal</h2>
 <div class="timeline"><div class="timeline-item"><strong>Configuração</strong><p>Administrador cadastra perfis, produtos, categorias, estoque, alérgenos e parâmetros.</p></div><div class="timeline-item"><strong>Compra</strong><p>Aluno ou responsável seleciona itens, valida restrições e confirma pagamento.</p></div><div class="timeline-item"><strong>Produção</strong><p>Funcionário acompanha a fila, atualiza status e prepara os pedidos.</p></div><div class="timeline-item"><strong>Retirada</strong><p>O pedido é entregue mediante código de retirada, com trilha de auditoria.</p></div></div>
 <div class="callout important"><strong>Convenção do manual:</strong> caixas azuis indicam decisões importantes, verdes indicam dicas, amarelas indicam atenção operacional e vermelhas indicam risco crítico.</div>
